@@ -1,4 +1,4 @@
-package API_GREENTCH.model;
+package API_GREENTCH.models;
 
 import java.io.Serializable;
 import java.util.Objects;

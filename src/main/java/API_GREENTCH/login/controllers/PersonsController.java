@@ -1,4 +1,4 @@
-package API_GREENTCH.controllers;
+package API_GREENTCH.login.controllers;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import API_GREENTCH.model.Person;
-import API_GREENTCH.services.PersonServices;
+import API_GREENTCH.login.services.PersonServices;
+import API_GREENTCH.models.Person;
 
 
 @RestController

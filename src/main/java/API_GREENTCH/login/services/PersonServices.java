@@ -1,4 +1,4 @@
-package API_GREENTCH.services;
+package API_GREENTCH.login.services;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import API_GREENTCH.exceptions.ResourceNotFoundException;
-import API_GREENTCH.model.Person;
-import API_GREENTCH.repositories.PersonRepository;
+import API_GREENTCH.login.repositories.PersonRepository;
+import API_GREENTCH.models.Person;
 
 @Service
 public class PersonServices {
