@@ -29,9 +29,7 @@ public class PersonServices {
 
 		Person person = new Person();
 
-		person.setFirstName("teste");
-		person.setLastName("test2");
-
+		
 		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id n encontrado"));
 	}
 
