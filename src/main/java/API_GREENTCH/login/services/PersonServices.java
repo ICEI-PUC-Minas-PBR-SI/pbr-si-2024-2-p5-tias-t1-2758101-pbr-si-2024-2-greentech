@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import API_GREENTCH.exceptions.ResourceNotFoundException;
 import API_GREENTCH.login.repositories.PersonRepository;
+import API_GREENTCH.models.Endereco;
 import API_GREENTCH.models.Person;
 
 @Service
@@ -38,16 +39,22 @@ public class PersonServices {
 		return repository.save(p);
 	}
 
-	public Person updatePerson(Person p, Long id) {
-		var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id n encontrado"));
+	public Person updatePerson(Long id, Person personUpdates) {
+        Person existingPerson = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Person not found"));
 
-		entity.setFirstName(p.getFirstName());
-		entity.setLastName(p.getLastName());
-		entity.setAddress(p.getAddress());
-		entity.setGender(p.getGender());
+        // Atualiza os dados
+        existingPerson.setFirstName(personUpdates.getFirstName());
+        existingPerson.setLastName(personUpdates.getLastName());
+        existingPerson.setGender(personUpdates.getGender());
 
-		return repository.save(entity);
-	}
+        // Limpa e adiciona novos endereços
+        existingPerson.getEnderecos().clear();
+        for (Endereco endereco : personUpdates.getEnderecos()) {
+            existingPerson.addEndereco(endereco); // Adiciona e configura a referência
+        }
+
+        return repository.save(existingPerson);
+    }
 
 	public void deletePerson(Long id) {
 

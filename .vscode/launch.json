@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiGreentchApplication<API-GREENTCH>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "API_GREENTCH.ApiGreentchApplication",
+            "projectName": "API-GREENTCH",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import API_GREENTCH.login.services.PersonServices;
+import API_GREENTCH.models.Endereco;
 import API_GREENTCH.models.Person;
 
 
@@ -25,9 +26,9 @@ public class PersonsController {
 	
 	@PutMapping(value ="/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Person update(@RequestBody Person p, @PathVariable(value = "id")Long id) {
-		return service.updatePerson(p,id);
+		return service.updatePerson(id,p);
 	}
-	
+
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletePerson(@PathVariable(value = "id")Long id ) {
@@ -42,13 +43,17 @@ public class PersonsController {
 	}
 	
 	@PostMapping( produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Person create(@RequestBody Person p) {
-		return service.createPerson(p);
+	public ResponseEntity<Person>create(@RequestBody Person p) {
+		if (p.getEnderecos() != null) {
+			for (Endereco endereco : p.getEnderecos()) {
+				endereco.setPerson(p);
+			}
+		}
+		return ResponseEntity.ok(service.createPerson(p));
 	}
 	
 
-	
-	
+
 	 
 
 }
