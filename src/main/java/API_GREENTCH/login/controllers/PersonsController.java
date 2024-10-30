@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import API_GREENTCH.login.services.EnderecoService;
 import API_GREENTCH.login.services.PersonServices;
 import API_GREENTCH.models.Endereco;
 import API_GREENTCH.models.Person;
@@ -18,6 +20,8 @@ public class PersonsController {
 	
 	@Autowired
 	private PersonServices service;
+	@Autowired
+	private EnderecoService enderecoService;
 	
 	@GetMapping(value ="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Person findById(@PathVariable(value = "id")Long id ) {
@@ -44,12 +48,14 @@ public class PersonsController {
 	
 	@PostMapping( produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Person>create(@RequestBody Person p) {
+		Person SavedPerson = service.createPerson(p);
 		if (p.getEnderecos() != null) {
 			for (Endereco endereco : p.getEnderecos()) {
-				endereco.setPerson(p);
+				endereco.setPerson(SavedPerson);
+				enderecoService.salvarEndereco(endereco);
 			}
 		}
-		return ResponseEntity.ok(service.createPerson(p));
+		return ResponseEntity.ok(SavedPerson);
 	}
 	
 

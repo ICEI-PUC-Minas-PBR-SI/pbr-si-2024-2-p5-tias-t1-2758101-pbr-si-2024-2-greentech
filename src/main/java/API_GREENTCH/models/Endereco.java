@@ -24,7 +24,7 @@ public class Endereco implements Serializable {
     private Long endereco_id;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
+    @JoinColumn(name = "person_id", nullable = true)
     @JsonIgnore
     private Person person;
 
@@ -36,6 +36,18 @@ public class Endereco implements Serializable {
 
     @Column
     private String cep;
+
+    @Column
+    private float latitude;
+
+    @Column
+    private float longitude;
+
+
+    public void setLongitude(float f) {
+        this.longitude = f;
+    }
+
 
     public Endereco() {}
 
@@ -72,4 +84,8 @@ public class Endereco implements Serializable {
         this.cep = cep;
     }
 
+
+    public void setLatitude(float latitude) {
+      this.latitude = latitude;
+    }
 }
