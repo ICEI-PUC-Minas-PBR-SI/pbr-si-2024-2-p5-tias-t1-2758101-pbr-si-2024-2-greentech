@@ -2,10 +2,12 @@ package API_GREENTCH.models;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,20 +20,20 @@ import jakarta.persistence.Table;
 public class Endereco implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long endereco_id;
 
-    @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = true)
-    @JsonIgnore
+    @JsonBackReference
     private Person person;
 
-    @Column(name ="logradouro", nullable = false)
+    @Column(name = "logradouro", nullable = false)
     private String logradouro;
 
-    @Column(name ="number", nullable = false)
+    @Column(name = "number", nullable = false)
     private String number;
 
     @Column
@@ -43,14 +45,26 @@ public class Endereco implements Serializable {
     @Column
     private float longitude;
 
+    @Column(nullable = true)
+    private String cidade;
+
+    @Column(nullable = true)
+    private String estado;
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     public void setLongitude(float f) {
         this.longitude = f;
     }
 
-
-    public Endereco() {}
-
+    public Endereco() {
+    }
 
     public Person getPerson() {
         return person;
@@ -72,6 +86,22 @@ public class Endereco implements Serializable {
         return number;
     }
 
+    public String getCidade() {
+        return cidade;
+    }
+    
+    public String getEstado() {
+        return estado;
+    }
+    
+    public float getLatitude() {
+        return latitude;
+    }
+    
+    public float getLongitude() {
+        return longitude;
+    }
+
     public void setNumber(String number) {
         this.number = number;
     }
@@ -84,8 +114,7 @@ public class Endereco implements Serializable {
         this.cep = cep;
     }
 
-
     public void setLatitude(float latitude) {
-      this.latitude = latitude;
+        this.latitude = latitude;
     }
 }

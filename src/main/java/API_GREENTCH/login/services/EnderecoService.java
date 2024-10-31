@@ -31,6 +31,8 @@ public class EnderecoService {
                     // Converte as coordenadas de String para float
                     endereco.setLatitude(Float.parseFloat(cepResponse.getLocation().getCoordinates().getLatitude()));
                     endereco.setLongitude(Float.parseFloat(cepResponse.getLocation().getCoordinates().getLongitude()));
+                    endereco.setCidade(cepResponse.getCity());
+                    endereco.setEstado(cepResponse.getState());
                 }
             } catch (Exception e) {
                 System.err.println("Erro ao buscar coordenadas para o CEP: " + e.getMessage());
