@@ -1,8 +1,12 @@
-import { render, screen } from '@testing-library/react';
+// frontend/src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './styles/App.css';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

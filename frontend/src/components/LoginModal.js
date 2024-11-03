@@ -1,8 +1,8 @@
-// frontend/src/LoginModal.js
+// frontend/src/components/LoginModal.js
 import React from 'react';
 import '../styles/App.css';
 
-function LoginModal({ onClose }) {
+function LoginModal({ onClose, onNavigate }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -16,7 +16,10 @@ function LoginModal({ onClose }) {
           <button type="submit">Entrar</button>
         </form>
         <p>
-          Não tem uma conta? <a href="/register">Crie uma agora</a>
+          Não tem uma conta?{' '}
+          <button className="link-button" onClick={() => onNavigate('register')}>
+            Crie uma agora
+          </button>
         </p>
       </div>
     </div>
