@@ -1,4 +1,4 @@
-// src/pages/Register.js
+// frontend/src/pages/Register.js
 import React, { useState } from 'react';
 import '../styles/App.css';
 
@@ -7,7 +7,7 @@ function Register() {
     firstName: '',
     lastName: '',
     gender: '',
-    enderecos: [{ logradouro: '', number: '', cep: '', cidade: '', estado: '' }]
+    enderecos: [{ cep: '', logradouro: '', number: '', bairro: '', cidade: '', estado: '' }]
   });
 
   const handleChange = (e) => {
@@ -22,11 +22,49 @@ function Register() {
     setFormData((prevData) => ({ ...prevData, enderecos: updatedEnderecos }));
   };
 
+  const fetchAddress = async (index) => {
+    const cep = formData.enderecos[index].cep.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+    if (cep.length !== 8) {
+      alert("Por favor, insira um CEP válido com 8 dígitos.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (data.erro) {
+        alert("CEP não encontrado.");
+        return;
+      }
+
+      const updatedEnderecos = [...formData.enderecos];
+      updatedEnderecos[index] = {
+        ...updatedEnderecos[index],
+        logradouro: data.logradouro || '',
+        bairro: data.bairro || '',
+        cidade: data.localidade || '',
+        estado: data.uf || ''
+      };
+
+      setFormData((prevData) => ({ ...prevData, enderecos: updatedEnderecos }));
+    } catch (error) {
+      console.error("Erro ao buscar o CEP:", error);
+      alert("Não foi possível buscar o CEP.");
+    }
+  };
+
   const handleAddAddress = () => {
     setFormData((prevData) => ({
       ...prevData,
-      enderecos: [...prevData.enderecos, { logradouro: '', number: '', cep: '', cidade: '', estado: '' }]
+      enderecos: [...prevData.enderecos, { cep: '', logradouro: '', number: '', bairro: '', cidade: '', estado: '' }]
     }));
+  };
+
+  const handleRemoveAddress = (index) => {
+    const updatedEnderecos = formData.enderecos.filter((_, i) => i !== index);
+    setFormData((prevData) => ({ ...prevData, enderecos: updatedEnderecos }));
   };
 
   const handleSubmit = async (e) => {
@@ -77,6 +115,15 @@ function Register() {
           <div key={index} className="address-fields">
             <input
               type="text"
+              name="cep"
+              placeholder="CEP"
+              value={endereco.cep}
+              onChange={(e) => handleAddressChange(index, e)}
+              onBlur={() => fetchAddress(index)}
+              required
+            />
+            <input
+              type="text"
               name="logradouro"
               placeholder="Logradouro"
               value={endereco.logradouro}
@@ -91,9 +138,9 @@ function Register() {
             />
             <input
               type="text"
-              name="cep"
-              placeholder="CEP"
-              value={endereco.cep}
+              name="bairro"
+              placeholder="Bairro"
+              value={endereco.bairro}
               onChange={(e) => handleAddressChange(index, e)}
             />
             <input
@@ -110,6 +157,12 @@ function Register() {
               value={endereco.estado}
               onChange={(e) => handleAddressChange(index, e)}
             />
+            {/* Mostrar o botão "Remover Endereço" apenas se houver mais de um endereço */}
+            {index > 0 && (
+              <button type="button" onClick={() => handleRemoveAddress(index)}>
+                Remover Endereço
+              </button>
+            )}
           </div>
         ))}
         <button type="button" onClick={handleAddAddress}>
