@@ -69,11 +69,11 @@ public class FotovoltaicoService {
         Map<String, Object> data = new HashMap<>();
 
         // Obter e converter dados da requisição
-        List<Integer> consumptionList = (List<Integer>) requestData.get("consumption");
+        List<Integer> consumptionList = (List<Integer>) requestData.get("consumptionList");
         int[] consumption = consumptionList.stream().mapToInt(Integer::intValue).toArray();
         int lastBillConsumption = (int) requestData.get("lastBillConsumption");
-        double lastBillValue = (double) requestData.get("lastBillValue");
-        double kwValue = (double) requestData.get("kwValue");
+        double lastBillValue = Double.parseDouble(String.valueOf(requestData.get("lastBillValue")));
+        double kwValue = Double.parseDouble(String.valueOf(requestData.get("kwValue")));
         String connection = (String) requestData.get("connection");
         int user_id = (int) requestData.get("userId");
 
