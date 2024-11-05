@@ -25,7 +25,11 @@ public class Endereco implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long endereco_id;
 
-   @ManyToOne(fetch = FetchType.LAZY)
+   public Long getEndereco_id() {
+        return endereco_id;
+    }
+
+@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = true)
     @JsonBackReference
     private Person person;

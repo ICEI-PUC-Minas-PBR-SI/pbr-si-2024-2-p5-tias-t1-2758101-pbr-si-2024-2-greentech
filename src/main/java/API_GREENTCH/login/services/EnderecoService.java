@@ -1,5 +1,7 @@
 package API_GREENTCH.login.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -40,6 +42,10 @@ public class EnderecoService {
         }
 
         return enderecoRepository.save(endereco);
+    }
+
+    public Optional<Endereco> getEndereco(Long id){
+        return enderecoRepository.findById(id);
     }
 
     // Classe para mapear a resposta da API
