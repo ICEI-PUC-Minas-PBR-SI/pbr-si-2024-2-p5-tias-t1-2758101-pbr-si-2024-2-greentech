@@ -11,7 +11,6 @@ import API_GREENTCH.models.WeatherData;
 @Service
 public class WeatherService {
 
-   
     private static final String BASE_URL = "https://archive-api.open-meteo.com/v1/archive";
 
     public WeatherData createApi(float latitude, float longitude) {
@@ -31,19 +30,16 @@ public class WeatherService {
                 .queryParam("timezone", "GMT")
                 .toUriString();
 
-       
-            
 
         // Faz a chamada à API e mapeia a resposta para WeatherApiResponse
         WeatherApiResponse response = restTemplate.getForObject(url, WeatherApiResponse.class);
-
+        
         if (response != null && response.getDaily() != null) {
             return new WeatherData(
                     response.getLatitude(),
                     response.getLongitude(),
                     response.getDaily().getTime(),
-                    response.getDaily().getRainSum()
-            );
+                    response.getDaily().getRainSum());
         }
         return null;
     }
