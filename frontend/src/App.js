@@ -1,10 +1,12 @@
 // frontend/src/App.js
 import React, { useState } from 'react';
+import { Layout, Menu } from 'antd';
+import { HomeOutlined, LoginOutlined } from '@ant-design/icons';
 import Home from './pages/Home';
-import Register from './pages/Register';
-import UserList from './pages/UserList';
-import EconomyCalculator from './pages/EconomyCalculator';
+import LoginRegister from './pages/LoginRegister';
 import './styles/App.css';
+
+const { Header, Content } = Layout;
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -14,24 +16,26 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="header">
-        <div className="project-name">Projeto GreenTech</div>
-        <nav className="nav-menu">
-          <button onClick={() => navigateTo('home')}>Home</button>
-          <button onClick={() => navigateTo('register')}>Cadastrar Usuário</button>
-          <button onClick={() => navigateTo('userList')}>Listar Usuários</button>
-          <button onClick={() => navigateTo('economyCalculator')}>Calcular Economia</button>
-        </nav>
-      </header>
-      
-      <main className="main-content">
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header className="header" style={{ backgroundColor: '#001529', display: 'flex', alignItems: 'center' }}>
+        <div className="project-name" style={{ color: '#fff', fontSize: '18px', fontWeight: 'bold', flexGrow: 1 }}>
+          Projeto GreenTech
+        </div>
+        <Menu theme="dark" mode="horizontal" selectedKeys={[currentPage]} style={{ flexGrow: 2 }}>
+          <Menu.Item key="home" icon={<HomeOutlined />} onClick={() => navigateTo('home')}>
+            Home
+          </Menu.Item>
+          <Menu.Item key="login" icon={<LoginOutlined />} onClick={() => navigateTo('login')}>
+            Entrar
+          </Menu.Item>
+        </Menu>
+      </Header>
+
+      <Content style={{ padding: '24px', backgroundColor: '#f0f2f5' }}>
         {currentPage === 'home' && <Home />}
-        {currentPage === 'register' && <Register />}
-        {currentPage === 'userList' && <UserList />}
-        {currentPage === 'economyCalculator' && <EconomyCalculator />}
-      </main>
-    </div>
+        {currentPage === 'login' && <LoginRegister />}
+      </Content>
+    </Layout>
   );
 }
 
