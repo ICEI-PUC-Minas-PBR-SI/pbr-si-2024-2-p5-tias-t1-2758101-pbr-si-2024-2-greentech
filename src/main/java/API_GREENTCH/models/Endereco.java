@@ -3,7 +3,6 @@ package API_GREENTCH.models;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +24,11 @@ public class Endereco implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long endereco_id;
 
-   @ManyToOne(fetch = FetchType.LAZY)
+   public Long getEndereco_id() {
+        return endereco_id;
+    }
+
+@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = true)
     @JsonBackReference
     private Person person;
