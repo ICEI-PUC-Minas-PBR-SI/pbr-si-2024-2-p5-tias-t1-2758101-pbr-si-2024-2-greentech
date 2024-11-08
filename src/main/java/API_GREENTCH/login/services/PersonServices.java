@@ -1,7 +1,10 @@
 package API_GREENTCH.login.services;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import API_GREENTCH.exceptions.ResourceNotFoundException;
 import API_GREENTCH.login.repositories.PersonRepository;
 import API_GREENTCH.models.Endereco;
 import API_GREENTCH.models.Person;
+import API_GREENTCH.login.Utils.Utils;
 
 @Service
 public class PersonServices {
@@ -62,6 +66,34 @@ public class PersonServices {
 
 		repository.delete(entity);
 
+	}
+
+	public Map<String, Object> login(Map<String, Object> body) {
+		Map<String, Object> response = new HashMap<>();
+
+		String email = (String) body.get("email");
+		String password = (String) body.get("password");
+		String hashPassword = Utils.sha256(password);
+		try{
+            Optional<Person> personOptional = repository.findByEmail(email);
+
+			Person person = personOptional.orElseThrow(() -> new Exception("Pessoa não encontrada"));
+
+			if (!person.getPassword().equals(hashPassword)) {
+                throw new Exception("Senha incorreta");
+            }
+
+			response.put("status", "success");
+            response.put("message", "Pessoa encontrada");
+            response.put("person", person);
+
+		}catch(Exception e) {
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+            response.put("person", null);
+		}
+
+		return response;
 	}
 
 }
