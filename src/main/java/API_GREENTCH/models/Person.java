@@ -1,6 +1,8 @@
 package API_GREENTCH.models;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +17,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import API_GREENTCH.login.Utils.Utils;
 
 @Entity
 @Table(name = "person")
@@ -37,6 +41,12 @@ public class Person implements Serializable {
 
 	@Column
 	private String gender;
+
+	@Column(name = "password", nullable = false)
+	private String password;
+
+	@Column(name = "email", nullable = false)
+	private String email;
 
 	public Person() {
 
@@ -105,5 +115,21 @@ public class Person implements Serializable {
         enderecos.add(endereco);
         endereco.setPerson(this);
     }
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = Utils.sha256(password);
+	}
 
 }

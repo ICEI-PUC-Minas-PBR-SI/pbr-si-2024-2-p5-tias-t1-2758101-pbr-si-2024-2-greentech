@@ -2,6 +2,7 @@ package API_GREENTCH.login.controllers;
 
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -57,9 +58,11 @@ public class PersonsController {
 		}
 		return ResponseEntity.ok(SavedPerson);
 	}
-	
 
-
-	 
+	@PostMapping(value="/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object>login(@RequestBody Map<String, Object> body) {
+		Map<String, Object> status = service.login(body);
+		return status;
+	}
 
 }
