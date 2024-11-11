@@ -8,7 +8,6 @@ import org.springframework.web.client.RestTemplate;
 
 import API_GREENTCH.login.repositories.EnderecoRepository;
 import API_GREENTCH.models.Endereco;
-
 @Service
 public class EnderecoService {
 
@@ -19,23 +18,17 @@ public class EnderecoService {
     private static final String AWESOME_API_URL = "https://cep.awesomeapi.com.br/json/";
 
     public Endereco salvarEndereco(Endereco endereco) {
-        System.out.println("Entrou");
         if (endereco.getCep() != null) {
-            System.out.println(AWESOME_API_URL);
-            // Constrói a URL da API com o CEP
             String url = AWESOME_API_URL + endereco.getCep();
-            System.out.println(url);
 
-            // Faz a chamada à API e mapeia a resposta
             try {
+                // Faz a chamada à API e mapeia a resposta
                 CepResponse cepResponse = restTemplate.getForObject(url, CepResponse.class);
+
                 if (cepResponse != null) {
-                    // Configura os campos do Endereco com base na resposta da AwesomeAPI
-                    endereco.setLatitude(cepResponse.getLat());
-                    endereco.setLongitude(cepResponse.getLng());
-                    endereco.setCidade(cepResponse.getCity());
-                    endereco.setEstado(cepResponse.getState());
-                    endereco.setLogradouro(cepResponse.getAddressName());
+                    // Configura os campos do Endereco com base na resposta da API
+                    endereco.setLatitude((float) cepResponse.getLat());
+                    endereco.setLongitude((float) cepResponse.getLng());
                 }
             } catch (Exception e) {
                 System.err.println("Erro ao buscar coordenadas para o CEP: " + e.getMessage());
@@ -45,19 +38,15 @@ public class EnderecoService {
         return enderecoRepository.save(endereco);
     }
 
-    public Optional<Endereco> getEndereco(Long id) {
-        return enderecoRepository.findById(id);
-    }
-
-    // Classe para mapear a resposta da AwesomeAPI
+    // Classe para mapear a resposta da API
     public static class CepResponse {
         private String cep;
         private String state;
         private String city;
         private String district;
-        private String addressName;
-        private float lng;
-        private float lat;
+        private String addressName;  // Mapeado para 'address_name'
+        private double lng;  // Usando double para mais precisão
+        private double lat;  // Usando double para mais precisão
 
         // Getters e Setters
         public String getCep() {
@@ -100,19 +89,19 @@ public class EnderecoService {
             this.addressName = addressName;
         }
 
-        public float getLng() {
+        public double getLng() {
             return lng;
         }
 
-        public void setLng(float lng) {
+        public void setLng(double lng) {
             this.lng = lng;
         }
 
-        public float getLat() {
+        public double getLat() {
             return lat;
         }
 
-        public void setLat(float lat) {
+        public void setLat(double lat) {
             this.lat = lat;
         }
     }
