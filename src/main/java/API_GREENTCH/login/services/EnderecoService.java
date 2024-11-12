@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 import API_GREENTCH.login.repositories.EnderecoRepository;
 import API_GREENTCH.models.Endereco;
+
 @Service
 public class EnderecoService {
 
@@ -44,9 +45,9 @@ public class EnderecoService {
         private String state;
         private String city;
         private String district;
-        private String addressName;  // Mapeado para 'address_name'
-        private double lng;  // Usando double para mais precisão
-        private double lat;  // Usando double para mais precisão
+        private String addressName; // Mapeado para 'address_name'
+        private double lng; // Usando double para mais precisão
+        private double lat; // Usando double para mais precisão
 
         // Getters e Setters
         public String getCep() {
@@ -104,5 +105,9 @@ public class EnderecoService {
         public void setLat(double lat) {
             this.lat = lat;
         }
+    }
+
+    public Optional<Endereco> getEndereco(Long id) {
+        return enderecoRepository.findById(id);
     }
 }
