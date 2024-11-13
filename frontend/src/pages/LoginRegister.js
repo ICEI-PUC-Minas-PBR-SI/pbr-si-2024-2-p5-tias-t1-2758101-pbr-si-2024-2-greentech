@@ -1,18 +1,17 @@
 // frontend/src/pages/LoginRegister.js
 import React, { useState } from 'react';
-import { Row, Col, Form, Input, Button, Typography, Divider, Select, Space } from 'antd';
+import { Row, Col, Form, Input, Button, Typography, Divider, Select, message } from 'antd';
 
 const { Title } = Typography;
 const { Option } = Select;
 
-function LoginRegister() {
-  const [isLogin, setIsLogin] = useState(true); // Controle de alternância entre Login e Registro
-  const [step, setStep] = useState(1); // Controle da etapa (1 - Dados Pessoais, 2 - Endereços)
-  const [currentAddressIndex, setCurrentAddressIndex] = useState(0); // Índice do endereço atualmente exibido
+function LoginRegister({ onLogin }) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    gender: 'Masculino',
+    gender: 'Feminino',
     email: '',
     password: '',
     confirmPassword: '',
@@ -20,15 +19,11 @@ function LoginRegister() {
   });
 
   const [currentAddress, setCurrentAddress] = useState({
-    cep: '',
     logradouro: '',
     number: '',
-    bairro: '',
-    cidade: '',
-    estado: '',
+    cep: '',
   });
 
-  // Funções de Manipulação de Dados
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -39,24 +34,19 @@ function LoginRegister() {
     setCurrentAddress((prevAddress) => ({ ...prevAddress, [name]: value }));
   };
 
-  // Função para buscar dados do CEP usando a API do ViaCEP
   const fetchAddressByCep = async () => {
-    const cep = currentAddress.cep.replace(/\D/g, ''); // Remove caracteres não numéricos
-
+    const cep = currentAddress.cep.replace(/\D/g, '');
     if (cep.length !== 8) {
-      alert("Por favor, insira um CEP válido com 8 dígitos.");
+      message.error("Por favor, insira um CEP válido com 8 dígitos.");
       return;
     }
-
     try {
       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
       const data = await response.json();
-
       if (data.erro) {
-        alert("CEP não encontrado.");
+        message.error("CEP não encontrado.");
         return;
       }
-
       setCurrentAddress((prevAddress) => ({
         ...prevAddress,
         logradouro: data.logradouro || '',
@@ -65,79 +55,85 @@ function LoginRegister() {
         estado: data.uf || ''
       }));
     } catch (error) {
+      message.error("Não foi possível buscar o CEP.");
       console.error("Erro ao buscar o CEP:", error);
-      alert("Não foi possível buscar o CEP.");
     }
   };
 
-  const handleAddAddress = () => {
-    // Adiciona o endereço atual ao array e limpa o formulário
-    setFormData((prevData) => ({
-      ...prevData,
-      enderecos: [...prevData.enderecos, currentAddress],
-    }));
-    setCurrentAddress({
-      cep: '',
-      logradouro: '',
-      number: '',
-      bairro: '',
-      cidade: '',
-      estado: '',
-    });
-    setCurrentAddressIndex(formData.enderecos.length); // Define o índice do novo endereço
-  };
-
-  const handleSaveAddress = () => {
-    // Atualiza o endereço atual no array
-    const updatedEnderecos = [...formData.enderecos];
-    updatedEnderecos[currentAddressIndex] = currentAddress;
-    setFormData((prevData) => ({ ...prevData, enderecos: updatedEnderecos }));
-  };
-
-  const handlePreviousAddress = () => {
-    // Navega para o endereço anterior
-    if (currentAddressIndex > 0) {
-      setCurrentAddressIndex(currentAddressIndex - 1);
-      setCurrentAddress(formData.enderecos[currentAddressIndex - 1]);
+  const addAddressIfComplete = () => {
+    const requiredFields = ["logradouro", "number", "cep"];
+    const isAddressComplete = requiredFields.every((field) => currentAddress[field]);
+  
+    if (isAddressComplete) {
+      setFormData((prevData) => ({
+        ...prevData,
+        enderecos: [...prevData.enderecos, currentAddress]  // Adiciona o novo endereço ao array existente
+      }));
+      return true;
+    } else {
+      message.error("Por favor, preencha todos os campos do endereço.");
+      return false;
     }
   };
 
-  const handleNextAddress = () => {
-    // Navega para o próximo endereço
-    if (currentAddressIndex < formData.enderecos.length - 1) {
-      setCurrentAddressIndex(currentAddressIndex + 1);
-      setCurrentAddress(formData.enderecos[currentAddressIndex + 1]);
+  const handleLogin = async (values) => {
+    try {
+      const response = await fetch('http://localhost:8080/person/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('userId', data.person.id);
+        onLogin(data.person.id);
+        message.success('Login realizado com sucesso!');
+      } else {
+        message.error(data.message);
+      }
+    } catch (error) {
+      message.error('Erro ao fazer login.');
+      console.error(error);
     }
   };
 
-  const handleSubmit = async () => {
-    // Validação de senha
+  const handleRegister = async () => {
+    console.log(formData)
     if (formData.password !== formData.confirmPassword) {
-      alert('As senhas não coincidem.');
+      message.error('As senhas não coincidem.');
       return;
     }
+
+    if (formData.enderecos.length === 0) {
+      const added = addAddressIfComplete();
+      console.log(added, "enderecos");
+      if (!added) return; // Impede o envio se o endereço não estiver completo
+    }
+
+    const { confirmPassword, ...dataToSend } = formData;
 
     try {
       const response = await fetch('http://localhost:8080/person', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          gender: formData.gender,
-          email: formData.email,
-          password: formData.password,
-          enderecos: formData.enderecos,
-        }),
+        body: JSON.stringify(dataToSend),
       });
-      const data = await response.json();
-      console.log('Usuário registrado com sucesso:', data);
+
+      if (response.ok) {
+        message.success('Registro realizado com sucesso!');
+        setIsLogin(true);
+      } else {
+        const errorData = await response.json();
+        message.error(errorData.message || 'Erro ao registrar o usuário.');
+      }
     } catch (error) {
-      console.error('Erro ao registrar o usuário:', error);
+      message.error('Erro ao registrar o usuário.');
+      console.error(error);
     }
   };
 
-  // Formulário de Dados Pessoais
   const personalInfoForm = (
     <Row gutter={16}>
       <Col span={12}>
@@ -153,8 +149,8 @@ function LoginRegister() {
       <Col span={12}>
         <Form.Item label="Gênero">
           <Select name="gender" value={formData.gender} onChange={(value) => setFormData((prevData) => ({ ...prevData, gender: value }))}>
-            <Option value="Masculino">Masculino</Option>
             <Option value="Feminino">Feminino</Option>
+            <Option value="Masculino">Masculino</Option>
             <Option value="Outros">Outros</Option>
           </Select>
         </Form.Item>
@@ -182,72 +178,39 @@ function LoginRegister() {
     </Row>
   );
 
-  // Formulário de Endereços
   const addressForm = (
     <>
-      <Title level={4}>Endereço {currentAddressIndex + 1}</Title>
+      <Title level={4}>Endereço</Title>
       <Row gutter={16}>
+        <Col span={8}>
+          <Form.Item label="Logradouro" required>
+            <Input name="logradouro" value={currentAddress.logradouro} onChange={handleAddressChange} placeholder="Logradouro" />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="Número" required>
+            <Input name="number" value={currentAddress.number} onChange={handleAddressChange} placeholder="Número" />
+          </Form.Item>
+        </Col>
         <Col span={8}>
           <Form.Item label="CEP" required>
             <Input name="cep" value={currentAddress.cep} onChange={handleAddressChange} onBlur={fetchAddressByCep} placeholder="CEP" />
           </Form.Item>
         </Col>
-        <Col span={8}>
-          <Form.Item label="Cidade">
-            <Input name="cidade" value={currentAddress.cidade} onChange={handleAddressChange} placeholder="Cidade" />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="Estado">
-            <Input name="estado" value={currentAddress.estado} onChange={handleAddressChange} placeholder="Estado" />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="Logradouro">
-            <Input name="logradouro" value={currentAddress.logradouro} onChange={handleAddressChange} placeholder="Logradouro" />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="Bairro">
-            <Input name="bairro" value={currentAddress.bairro} onChange={handleAddressChange} placeholder="Bairro" />
-          </Form.Item>
-        </Col>
-        <Col span={4}>
-          <Form.Item label="Número">
-            <Input name="number" value={currentAddress.number} onChange={handleAddressChange} placeholder="Número" />
-          </Form.Item>
-        </Col>
       </Row>
-      <Button.Group style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-        <Button onClick={handlePreviousAddress} disabled={currentAddressIndex === 0}>
-          Anterior
-        </Button>
-        <Button onClick={handleSaveAddress} type="primary">
-          Salvar Alterações
-        </Button>
-        <Button onClick={handleNextAddress} disabled={currentAddressIndex === formData.enderecos.length - 1}>
-          Próximo
-        </Button>
-      </Button.Group>
       <Divider />
-      <Space style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button type="dashed" onClick={handleAddAddress}>
-          Adicionar Novo Endereço
-        </Button>
-        <Button type="primary" onClick={handleSubmit}>
-          Registrar
-        </Button>
-      </Space>
+      <Button type="primary" onClick={handleRegister} block>
+        Registrar
+      </Button>
     </>
   );
 
-  // Formulário de Login
   const loginForm = (
     <>
-      <Form.Item label="Email" required>
+      <Form.Item label="Email" name="email" required>
         <Input name="email" placeholder="Email" />
       </Form.Item>
-      <Form.Item label="Senha" required>
+      <Form.Item label="Senha" name="password" required>
         <Input.Password name="password" placeholder="Senha" />
       </Form.Item>
       <Button type="primary" htmlType="submit" block>
@@ -264,7 +227,7 @@ function LoginRegister() {
       </Col>
       <Col span={10} style={{ padding: '40px', backgroundColor: '#fff' }}>
         <Title level={3} style={{ textAlign: 'center' }}>{isLogin ? 'Login' : 'Registrar'}</Title>
-        <Form layout="vertical" onFinish={isLogin ? undefined : handleSubmit}>
+        <Form layout="vertical" onFinish={isLogin ? handleLogin : handleRegister}>
           {isLogin ? loginForm : step === 1 ? personalInfoForm : addressForm}
         </Form>
         <Divider />

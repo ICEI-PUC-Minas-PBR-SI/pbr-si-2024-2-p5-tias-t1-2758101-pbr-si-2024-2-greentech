@@ -1,20 +1,30 @@
-// EconomyCalculator.js
-import React, { useState } from 'react';
-import { Typography, Button, Input, Row, Col, Form, Divider, Card, Select } from 'antd';
+// frontend/src/pages/EconomyCalculator.js
+import React, { useState, useEffect } from 'react';
+import { Typography, Button, Input, Row, Col, Form, Divider, Card, Select, message } from 'antd';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 function EconomyCalculator() {
   const [formData, setFormData] = useState({
-    lastBillValue: '',           
-    lastBillConsumption: '',     
-    consumptionList: ['', '', '', '', '', ''], 
-    kwValue: '',                 
-    connection: 'monofasico',    
-    userId: ''                  
+    lastBillValue: '',
+    lastBillConsumption: '',
+    consumptionList: ['', '', '', '', '', ''],
+    kwValue: '',
+    connection: 'monofasico',
   });
+  const [userId, setUserId] = useState(null);
   const [result, setResult] = useState(null);
+
+  // Obtém o ID do usuário logado ao carregar o componente
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    } else {
+      message.error('Usuário não está logado.');
+    }
+  }, []);
 
   const handleConsumptionChange = (index, value) => {
     const newConsumptionList = [...formData.consumptionList];
@@ -24,16 +34,21 @@ function EconomyCalculator() {
 
   const handleSubmit = async () => {
     try {
+      if (!userId) {
+        message.error('ID do usuário não encontrado. Faça login para continuar.');
+        return;
+      }
+
       const response = await fetch('http://localhost:8080/fotovoltaico/calc-economy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          lastBillValue: parseFloat(formData.lastBillValue || 0).toFixed(2),  
-          lastBillConsumption: parseInt(formData.lastBillConsumption, 10),    
-          consumptionList: formData.consumptionList.map(value => parseInt(value || 0, 10)), 
-          kwValue: parseFloat(formData.kwValue || 0).toFixed(2),              
+          lastBillValue: parseFloat(formData.lastBillValue || 0).toFixed(2),
+          lastBillConsumption: parseInt(formData.lastBillConsumption, 10),
+          consumptionList: formData.consumptionList.map(value => parseInt(value || 0, 10)),
+          kwValue: parseFloat(formData.kwValue || 0).toFixed(2),
           connection: formData.connection,
-          userId: parseInt(formData.userId, 10)                              
+          userId: userId  // ID do usuário inserido automaticamente
         })
       });
 
@@ -46,7 +61,7 @@ function EconomyCalculator() {
       setResult(data.payload);
     } catch (error) {
       console.error('Erro ao calcular economia:', error);
-      alert(error.message);
+      message.error(error.message);
     }
   };
 
@@ -124,16 +139,6 @@ function EconomyCalculator() {
                 </Select>
               </Form.Item>
 
-              <Form.Item label="ID do Usuário">
-                <Input
-                  type="number"
-                  placeholder="Digite o ID do usuário"
-                  value={formData.userId}
-                  onChange={(e) => setFormData({ ...formData, userId: e.target.value })}
-                  required
-                />
-              </Form.Item>
-
               <Form.Item>
                 <Button type="primary" htmlType="submit" block>
                   Calcular Economia
@@ -146,7 +151,7 @@ function EconomyCalculator() {
         {/* Exibe o resultado ao lado do formulário apenas após o cálculo */}
         {result && (
           <Col span={12}>
-            <Card bordered style={{ backgroundColor: '#f5f5f5', padding: '20px' }}>
+            <Card bordered style={{ backgroundColor: '#fff', padding: '20px' }}>
               <Title level={4} style={{ textAlign: 'center' }}>Detalhes da Economia - Conta de Energia</Title>
               <Divider />
               
