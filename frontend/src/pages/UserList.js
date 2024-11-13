@@ -31,9 +31,9 @@ function UserList() {
   const deleteUser = async (id) => {
     try {
       await fetch(`http://localhost:8080/person/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
-      setUsers(users.filter(user => user.id !== id));
+      setUsers(users.filter((user) => user.id !== id));
       message.success('Usuário excluído com sucesso');
     } catch (error) {
       console.error('Erro ao deletar usuário:', error);
@@ -55,9 +55,9 @@ function UserList() {
     try {
       const updatedData = {
         ...values,
-        enderecos: values.enderecos.map(endereco => ({
-          ...endereco
-        }))
+        enderecos: values.enderecos.map((endereco) => ({
+          ...endereco,
+        })),
       };
 
       const response = await fetch(`http://localhost:8080/person/${editingUser.id}`, {
@@ -73,7 +73,7 @@ function UserList() {
       }
 
       const updatedUser = await response.json();
-      setUsers(users.map(user => (user.id === updatedUser.id ? updatedUser : user)));
+      setUsers(users.map((user) => (user.id === updatedUser.id ? updatedUser : user)));
       message.success('Usuário atualizado com sucesso');
       closeModal();
     } catch (error) {
@@ -112,27 +112,16 @@ function UserList() {
           </Button>
         </Space>
       ),
-    }
+    },
   ];
 
   return (
     <div style={{ padding: '20px' }}>
       <Title level={3}>Lista de Usuários</Title>
-      <Table
-        columns={columns}
-        dataSource={users}
-        loading={loading}
-        rowKey="id"
-        pagination={{ pageSize: 10 }}
-      />
+      <Table columns={columns} dataSource={users} loading={loading} rowKey="id" pagination={{ pageSize: 10 }} />
 
       {/* Modal para edição de usuário */}
-      <Modal
-        title="Editar Usuário"
-        visible={isModalOpen}
-        onCancel={closeModal}
-        footer={null}
-      >
+      <Modal title="Editar Usuário" visible={isModalOpen} onCancel={closeModal} footer={null}>
         {editingUser && (
           <Form
             layout="vertical"
@@ -141,7 +130,7 @@ function UserList() {
               firstName: editingUser.firstName,
               lastName: editingUser.lastName,
               gender: editingUser.gender,
-              enderecos: editingUser.enderecos || [{}]
+              enderecos: editingUser.enderecos || [{}],
             }}
           >
             <Form.Item
@@ -168,52 +157,60 @@ function UserList() {
 
             {/* Campos de endereço */}
             <Form.List name="enderecos">
-              {(fields) =>
-                fields.map((field) => (
-                  <div key={field.key}>
-                    <Form.Item
-                      {...field}
-                      label="Logradouro"
-                      name={[field.name, 'logradouro']}
-                      rules={[{ required: true, message: 'Por favor, insira o logradouro' }]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
-                      label="Número"
-                      name={[field.name, 'number']}
-                      rules={[{ required: true, message: 'Por favor, insira o número' }]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
-                      label="CEP"
-                      name={[field.name, 'cep']}
-                      rules={[{ required: true, message: 'Por favor, insira o CEP' }]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
-                      label="Cidade"
-                      name={[field.name, 'cidade']}
-                      rules={[{ required: true, message: 'Por favor, insira a cidade' }]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
-                      label="Estado"
-                      name={[field.name, 'estado']}
-                      rules={[{ required: true, message: 'Por favor, insira o estado' }]}
-                    >
-                      <Input />
-                    </Form.Item>
-                  </div>
-                ))
-              }
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, fieldKey, ...restField }) => (
+                    <div key={key} style={{ marginBottom: 10 }}>
+                      <Form.Item
+                        {...restField}
+                        label="Logradouro"
+                        name={[name, 'logradouro']}
+                        rules={[{ required: true, message: 'Por favor, insira o logradouro' }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        label="Número"
+                        name={[name, 'number']}
+                        rules={[{ required: true, message: 'Por favor, insira o número' }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        label="CEP"
+                        name={[name, 'cep']}
+                        rules={[{ required: true, message: 'Por favor, insira o CEP' }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        label="Cidade"
+                        name={[name, 'cidade']}
+                        rules={[{ required: true, message: 'Por favor, insira a cidade' }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        label="Estado"
+                        name={[name, 'estado']}
+                        rules={[{ required: true, message: 'Por favor, insira o estado' }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Button type="dashed" onClick={() => remove(name)} style={{ width: '100%', marginBottom: 10 }}>
+                        Remover Endereço
+                      </Button>
+                    </div>
+                  ))}
+                  <Button type="dashed" onClick={() => add()} style={{ width: '100%' }}>
+                    Adicionar Novo Endereço
+                  </Button>
+                </>
+              )}
             </Form.List>
 
             <Form.Item>
