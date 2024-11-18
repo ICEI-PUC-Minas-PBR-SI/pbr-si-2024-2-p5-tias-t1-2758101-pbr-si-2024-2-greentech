@@ -9,9 +9,11 @@
     "antd": "^5.21.6",
     "axios": "^1.7.7",
     "frontend": "file:",
+    "leaflet": "^1.9.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-input-mask": "^2.0.4",
+    "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.27.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
