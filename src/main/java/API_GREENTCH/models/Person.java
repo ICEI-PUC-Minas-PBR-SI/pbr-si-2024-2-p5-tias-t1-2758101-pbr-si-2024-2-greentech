@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -42,9 +43,11 @@ public class Person implements Serializable {
 	@Column
 	private String gender;
 
+	@JsonIgnore
 	@Column(name = "password", nullable = false)
 	private String password;
 
+	@JsonIgnore
 	@Column(name = "email", nullable = false)
 	private String email;
 
@@ -111,10 +114,10 @@ public class Person implements Serializable {
 		this.gender = gender;
 	}
 
-    public void addEndereco(Endereco endereco) {
-        enderecos.add(endereco);
-        endereco.setPerson(this);
-    }
+	public void addEndereco(Endereco endereco) {
+		enderecos.add(endereco);
+		endereco.setPerson(this);
+	}
 
 	public String getEmail() {
 		return email;
