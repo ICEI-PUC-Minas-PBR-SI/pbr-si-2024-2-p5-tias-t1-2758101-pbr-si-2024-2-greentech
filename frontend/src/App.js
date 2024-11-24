@@ -13,6 +13,7 @@ import LoginRegister from "./pages/LoginRegister";
 import EconomyCalculator from "./pages/EconomyCalculator";
 import PluvialEconomyCalculator from "./pages/PluvialEconomyCalculator";
 import Users from "./pages/UserList";
+import Dashboard from "./pages/Dashboard";
 import "./styles/App.css";
 
 const { Header, Sider, Content } = Layout;
@@ -68,11 +69,10 @@ function App() {
           justifyContent: "space-between",
           alignItems: "center",
           zIndex: 1000,
-        }}
-      >
+        }}>
         <div style={{ color: "#fff", fontSize: "18px", fontWeight: "bold" }}>
           GreenTech
-          <span style={{ marginLeft: "85px", fontWeight: "normal", whiteSpace: "nowrap", }}>
+          <span style={{ marginLeft: "85px", fontWeight: "normal", whiteSpace: "nowrap" }}>
             {pageTitles[currentPage] || "Página"}
           </span>
         </div>
@@ -98,8 +98,7 @@ function App() {
             left: 0,
             top: 64,
             zIndex: 999,
-          }}
-        >
+          }}>
           <Menu mode="inline" theme="dark" selectedKeys={[currentPage]} style={{ height: "100%", borderRight: 0 }}>
             <Menu.Item key="home" icon={<HomeOutlined />} onClick={() => navigateTo("home")}>
               Home
@@ -115,15 +114,13 @@ function App() {
                 <Menu.Item
                   key="economyCalculator"
                   icon={<CalculatorOutlined />}
-                  onClick={() => navigateTo("economyCalculator")}
-                >
+                  onClick={() => navigateTo("economyCalculator")}>
                   Economia Solar
                 </Menu.Item>
                 <Menu.Item
                   key="pluvialEconomyCalculator"
                   icon={<CloudOutlined />}
-                  onClick={() => navigateTo("pluvialEconomyCalculator")}
-                >
+                  onClick={() => navigateTo("pluvialEconomyCalculator")}>
                   Economia Pluvial
                 </Menu.Item>
                 <Menu.Item key="settings" icon={<SettingOutlined />} onClick={() => navigateTo("settings")}>
@@ -140,11 +137,11 @@ function App() {
             marginLeft: 200,
             padding: "24px",
             backgroundColor: "#f0f2f5",
-          }}
-        >
+          }}>
           <Content>
             {currentPage === "home" && <Home />}
             {currentPage === "login" && <LoginRegister onLogin={handleLogin} />}
+            {currentPage === "dashboard" && isAuthenticated && <Dashboard />}
             {currentPage === "economyCalculator" && isAuthenticated && <EconomyCalculator />}
             {currentPage === "pluvialEconomyCalculator" && isAuthenticated && <PluvialEconomyCalculator />}
             {currentPage === "Users" && isAuthenticated && <Users />}
