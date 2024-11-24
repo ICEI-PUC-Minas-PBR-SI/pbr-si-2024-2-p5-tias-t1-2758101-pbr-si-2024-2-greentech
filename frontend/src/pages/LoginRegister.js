@@ -4,6 +4,7 @@ import { Row, Col, Typography, Divider, Button, message } from "antd";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const { Title } = Typography;
 
 function LoginRegister({ onLogin }) {
@@ -11,7 +12,8 @@ function LoginRegister({ onLogin }) {
 
   const handleLogin = async (values) => {
     try {
-      const response = await fetch("http://localhost:8080/person/login", {
+      const response = await fetch(`${API_BASE_URL}/person/login`, {
+      // const response = await fetch("http://localhost:8080/person/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -34,7 +36,8 @@ function LoginRegister({ onLogin }) {
 
   const handleRegister = async (formData) => {
     try {
-      const response = await fetch("http://localhost:8080/person", {
+      const response = await fetch(`${API_BASE_URL}/person`, { 
+      // const response = await fetch("http://localhost:8080/person", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

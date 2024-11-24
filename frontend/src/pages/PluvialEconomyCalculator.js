@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Button, Input, Form, Divider, Card, Select, message, Modal } from 'antd';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -23,7 +24,8 @@ function PluvialEconomyCalculator() {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8080/person/${userId}`);
+      const response = await fetch(`${API_BASE_URL}/person/${userId}`);
+      //const response = await fetch(`http://localhost:8080/person/${userId}`);
       if (!response.ok) throw new Error('Erro ao buscar dados do usuário');
       const data = await response.json();
       setUser(data);
@@ -68,7 +70,8 @@ function PluvialEconomyCalculator() {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8080/person/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/person/${userId}`, {
+      // const response = await fetch(`http://localhost:8080/person/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...user, enderecos: addresses }),
@@ -114,7 +117,8 @@ function PluvialEconomyCalculator() {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/pluvial/endereco/${formData.selectedAddressId}/${formData.roofArea}`, {
+      const response = await fetch(`${API_BASE_URL}/pluvial/endereco/${formData.selectedAddressId}/${formData.roofArea}`, {
+      //const response = await fetch(`http://localhost:8080/pluvial/endereco/${formData.selectedAddressId}/${formData.roofArea}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });

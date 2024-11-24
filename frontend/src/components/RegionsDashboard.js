@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from 'antd';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function RegionsDashboard() {
   const [regions, setRegions] = useState([]);
   const [mostAccessed, setMostAccessed] = useState(null);
@@ -12,7 +14,8 @@ function RegionsDashboard() {
   useEffect(() => {
     const fetchRegionsData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/relatorio/mais-acessados');
+        const response = await fetch(`${API_BASE_URL}/relatorio/mais-acessados`);
+        // const response = await fetch('http://localhost:8080/relatorio/mais-acessados');
         if (!response.ok) {
           throw new Error('Erro ao buscar os dados do servidor');
         }
