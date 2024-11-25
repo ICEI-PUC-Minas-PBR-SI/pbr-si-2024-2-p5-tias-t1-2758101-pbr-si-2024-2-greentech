@@ -43,11 +43,9 @@ public class Person implements Serializable {
 	@Column
 	private String gender;
 
-	@JsonIgnore
 	@Column(name = "password", nullable = false)
 	private String password;
 
-	@JsonIgnore
 	@Column(name = "email", nullable = false)
 	private String email;
 
