@@ -15,9 +15,13 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Permitir CORS para todos os endpoints
-                        .allowedOrigins("http://localhost:3000") // Permitir apenas esta origem
-                        .allowedMethods("GET", "POST", "PUT", "DELETE") // Métodos permitidos
-                        .allowedHeaders("*"); // Cabeçalhos permitidos
+                        .allowedOrigins(
+                                "http://localhost:3000", // Permitir no ambiente de desenvolvimento
+                                "https://greentechweb.azurewebsites.net" // Permitir no ambiente de produção
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
+                        .allowedHeaders("*") // Cabeçalhos permitidos
+                        .allowCredentials(true); // Permitir cookies/autenticação (se necessário)
             }
         };
     }
