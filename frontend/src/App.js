@@ -12,8 +12,9 @@ import Home from "./pages/Home";
 import LoginRegister from "./pages/LoginRegister";
 import EconomyCalculator from "./pages/EconomyCalculator";
 import PluvialEconomyCalculator from "./pages/PluvialEconomyCalculator";
-import Users from "./pages/UserList";
+ // import Users from "./pages/UserList";
 import Dashboard from "./pages/Dashboard";
+import SettingsPage from "./pages/SettingsPage"; // Importar a página de configurações
 import "./styles/App.css";
 
 const { Header, Sider, Content } = Layout;
@@ -29,7 +30,7 @@ function App() {
     dashboard: "Dashboard",
     economyCalculator: "Economia Solar",
     pluvialEconomyCalculator: "Economia Pluvial",
-    settings: "Configurações",
+    settings: "Configurações", // Adicionado título para a página de configurações
     login: "Login",
   };
 
@@ -144,7 +145,7 @@ function App() {
             {currentPage === "dashboard" && isAuthenticated && <Dashboard />}
             {currentPage === "economyCalculator" && isAuthenticated && <EconomyCalculator />}
             {currentPage === "pluvialEconomyCalculator" && isAuthenticated && <PluvialEconomyCalculator />}
-            {currentPage === "Users" && isAuthenticated && <Users />}
+            {currentPage === "settings" && isAuthenticated && <SettingsPage />} {/* Configurações */}
           </Content>
         </Layout>
       </Layout>
