@@ -4,6 +4,7 @@ Este projeto foi desenvolvido como parte de uma atividade acadêmica na Pontifí
 
 Visão Geral do Projeto
 O projeto visa criar ferramentas digitais que permitam aos usuários calcular a economia potencial gerada pela captação de água da chuva e pela instalação de placas solares, com interfaces intuitivas e acessíveis para diferentes perfis de usuários.
+Link de Acesso: https://greentechweb.azurewebsites.net/
 
 - Funcionalidades
 
