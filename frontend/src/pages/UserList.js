@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Typography, Space, Button, Modal, Form, Input, message } from 'antd';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const { Title } = Typography;
 
 function UserList() {
@@ -17,7 +18,8 @@ function UserList() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/person');
+      const response = await fetch(`${API_BASE_URL}/person`);
+      // const response = await fetch('http://localhost:8080/person');
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -30,7 +32,8 @@ function UserList() {
 
   const deleteUser = async (id) => {
     try {
-      await fetch(`http://localhost:8080/person/${id}`, {
+      await fetch(`${API_BASE_URL}/person/${id}`, {
+      //await fetch(`http://localhost:8080/person/${id}`, {
         method: 'DELETE',
       });
       setUsers(users.filter((user) => user.id !== id));
@@ -60,7 +63,8 @@ function UserList() {
         })),
       };
 
-      const response = await fetch(`http://localhost:8080/person/${editingUser.id}`, {
+      const response = await fetch(`${API_BASE_URL}/person/${editingUser.id}`, {
+      // const response = await fetch(`http://localhost:8080/person/${editingUser.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

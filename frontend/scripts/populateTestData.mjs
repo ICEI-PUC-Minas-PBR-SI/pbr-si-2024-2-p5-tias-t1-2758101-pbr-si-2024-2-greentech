@@ -1,9 +1,17 @@
 import fetch from "node-fetch";
 
 const populateTestData = async () => {
-  const baseUrl = "http://localhost:8080/person";
+  const baseUrl = "https://api-greentechv1.azurewebsites.net/person";
 
   const genders = ["Feminino", "Masculino", "Outros"];
+  const firstNames = [
+    "João", "Maria", "Ana", "Pedro", "Lucas", "Julia", "Marcos", "Sofia", 
+    "Gabriel", "Camila", "Rafael", "Larissa", "Mateus", "Isabella", "Tiago"
+  ];
+  const lastNames = [
+    "Silva", "Santos", "Oliveira", "Souza", "Pereira", "Lima", "Almeida", 
+    "Ferreira", "Costa", "Gomes", "Martins", "Araujo", "Carvalho", "Ramos"
+  ];
   const cities = [
     { cidade: "São Paulo", estado: "SP", cep: "01001-000" },
     { cidade: "Rio de Janeiro", estado: "RJ", cep: "20010-000" },
@@ -29,16 +37,18 @@ const populateTestData = async () => {
 
   const generateRandomUser = (index) => {
     const cityData = cities[Math.floor(Math.random() * cities.length)];
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     return {
-      firstName: `User${index}`,
-      lastName: `Last${index}`,
+      firstName,
+      lastName,
       gender: genders[Math.floor(Math.random() * genders.length)],
       email: `user${index}@example.com`,
       password: "password123",
       confirmPassword: "password123",
       enderecos: [
         {
-          logradouro: `Rua Teste ${index}`,
+          logradouro: `Rua Exemplo ${index}`,
           number: `${100 + index}`,
           cep: cityData.cep,
           cidade: cityData.cidade,
@@ -74,16 +84,13 @@ const populateTestData = async () => {
 
   console.log("Iniciando o registro de usuários de teste...");
 
-  for (let i = 1; i <= 1500; i++) {
+  for (let i = 1; i <= 30; i++) {
     const userData = generateRandomUser(i);
+    console.log("Enviando dados:", JSON.stringify(userData));
     await createUser(userData);
 
-    // Delay de 200ms entre registros para atualização gradual
+    // Delay de 200ms entre registros para evitar sobrecarga
     await new Promise((resolve) => setTimeout(resolve, 200));
-
-    if (i % 100 === 0) {
-      console.log(`${i} registros criados até agora.`);
-    }
   }
 
   console.log("Registro de usuários de teste concluído.");
