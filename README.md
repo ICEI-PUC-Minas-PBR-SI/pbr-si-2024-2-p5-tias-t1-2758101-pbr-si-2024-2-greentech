@@ -46,9 +46,11 @@ O GreenTech foi desenvolvido para atender a diferentes perfis de usuários, incl
 - Diagram do Banco de Dados
 ![Diagrama ER com entidades coloridas (notação UML)](https://github.com/user-attachments/assets/649b7e90-91c3-4281-987f-d39150073e04)
 
-
 - Exemplo de Relatório de Análise Descritiva
 [Relatório de Análise Descritiva.pdf](https://github.com/user-attachments/files/17985254/Relatorio.de.Analise.Descritiva.pdf)
+
+- Exemplo de Relatório Amostral no PowerBi
+[Relatório TIS.pdf](https://github.com/user-attachments/files/17985495/Relatorio.TIS.pdf)
 
 - Contribuições
 
