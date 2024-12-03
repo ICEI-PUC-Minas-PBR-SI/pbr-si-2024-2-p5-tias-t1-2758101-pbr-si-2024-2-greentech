@@ -44,7 +44,8 @@ O GreenTech foi desenvolvido para atender a diferentes perfis de usuários, incl
 ° Carlos, o Engenheiro de Projetos Públicos – Focado em implementar soluções sustentáveis em obras públicas.
 
 - Diagram do Banco de Dados
-![Classe UML (3)](https://github.com/user-attachments/assets/9c108f74-b816-4d19-96d7-51517c4147f3)
+![Diagrama ER com entidades coloridas (notação UML)](https://github.com/user-attachments/assets/649b7e90-91c3-4281-987f-d39150073e04)
+
 
 - Exemplo de Relatório de Análise Descritiva
 [Relatório de Análise Descritiva.pdf](https://github.com/user-attachments/files/17985254/Relatorio.de.Analise.Descritiva.pdf)
